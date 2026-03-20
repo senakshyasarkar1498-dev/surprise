@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Surprise!</title>
+    <style>
+        /* General Reset & Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; 
+            transition: background-color 0.8s ease, color 0.8s ease;
+            background-color: white;
+            color: black;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease;
+            cursor: pointer;
+        }
+
+        .active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        h1 { font-size: 28px; margin-bottom: 20px; font-weight: 600; }
+        p { font-size: 18px; line-height: 1.6; max-width: 600px; }
+        
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            color: #ff69b4; 
+            font-size: 24px;
+            animation: floatUp linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
+        .buttons-container {
+            position: absolute;
+            bottom: 20%;
+            display: flex;
+            gap: 20px;
+            z-index: 20;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        button:active { transform: scale(0.95); }
+
+        .btn-yes {
+            background-color: #ffb6c1; 
+            color: black;
+        }
+
+        .btn-no {
+            background-color: #f1f1f1;
+            color: black;
+            position: relative; 
+        }
+
+        .btn-action {
+            background-color: transparent;
+            border: 2px solid currentColor;
+            color: inherit;
+            padding: 15px 40px;
+        }
+
+        .banner {
+            font-size: 32px;
+            color: #ff69b4;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: popIn 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .cake-wrapper {
+            position: relative;
+            margin-top: 20px;
+            animation: popIn 1s ease 0.5s both;
+        }
+
+        .cake-top {
+            width: 160px;
+            height: 60px;
+            background-color: #ffc0cb;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+        }
+
+        .cake-bottom {
+            width: 180px;
+            height: 50px;
+            background-color: #ff69b4;
+            border-radius: 10px;
+            margin-left: -10px;
+        }
+
+        .candles {
+            display: flex;
+            justify-content: space-evenly;
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .candle {
+            width: 3px;
+            height: 25px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 2px, #ff69b4 2px, #ff69b4 4px);
+            position: relative;
+        }
+
+        .flame {
+            width: 6px;
+            height: 10px;
+            background-color: #ffcc00;
+            border-radius: 50%;
+            position: absolute;
+            top: -12px;
+            left: -1.5px;
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        .confetti {
+            position: absolute;
+            top: -10px;
+            width: 10px;
+            height: 20px;
+            z-index: 100;
+            pointer-events: none;
+            animation: fallDown linear forwards;
+        }
+
+        @keyframes fallDown {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        #screen7 {
+            cursor: default;
+        }
+        
+        .message-box {
+            background: rgba(255, 182, 193, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #ffb6c1;
+        }
+        
+        .message-box h1 {
+            color: #ff69b4;
+        }
+
+        .tap-hint {
+            position: absolute;
+            bottom: 30px;
+            font-size: 12px;
+            color: #888;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="screen1" class="screen active" onclick="nextScreen(2)">
+        <h1>Its your special day yeyyy</h1>
+        <div class="tap-hint">Tap anywhere to continue</div>
+    </div>
+
+    <div id="screen2" class="screen" onclick="nextScreen(3)">
+        <h1>To make it more special</h1>
+        <div class="tap-hint">Tap to continue</div>
+    </div>
+
+    <div id="screen3" class="screen" style="cursor: default;">
+        <h1>I made a surprise for you , Do you wanna see it</h1>
+        <div class="buttons-container">
+            <button id="btnYes" class="btn-yes">Yes</button>
+            <button id="btnNo" class="btn-no">No</button>
+        </div>
+    </div>
+
+    <div id="screen4" class="screen" style="cursor: default;">
+        <button id="btnLights" class="btn-action">Lights on</button>
+    </div>
+
+    <div id="screen5" class="screen" style="cursor: default;">
+        <button id="btnDecorate" class="btn-action">Decorate</button>
+    </div>
+
+    <div id="screen6" class="screen" style="cursor: default;">
+        <div class="banner">Happy Birthday!</div>
+        <div class="cake-wrapper">
+            <div class="candles" id="candleContainer"></div>
+            <div class="cake-top"></div>
+            <div class="cake-bottom"></div>
+        </div>
+    </div>
+
+    <div id="screen7" class="screen">
+        <div class="message-box">
+            <h1>Special message for you</h1>
+            <p>I thank my lucky stars every day for having you in my life. You make me feel safe, calm, and complete. You’re the light I once wished for during my darkest days. Happy birthday to the most beautiful girl in my life. I’m lucky to have you in my life. Really sorry I can’t be there with you, but trust me, I miss you more than you know. ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        function nextScreen(num) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById('screen' + num).classList.add('active');
+        }
+
+        function createHeart() {
+            if (!document.getElementById('screen1').classList.contains('active')) return;
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 300);
+
+        const btnNo = document.getElementById('btnNo');
+        
+        function moveNoButton(e) {
+            if (e) e.preventDefault(); 
+            btnNo.style.position = 'fixed';
+            const safeWidth = window.innerWidth - btnNo.offsetWidth - 20;
+            const safeHeight = window.innerHeight - btnNo.offsetHeight - 20;
+            const randomX = Math.max(10, Math.random() * safeWidth);
+            const randomY = Math.max(10, Math.random() * safeHeight);
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        btnNo.addEventListener('mouseover', moveNoButton);
+        btnNo.addEventListener('touchstart', moveNoButton);
+        btnNo.addEventListener('click', moveNoButton);
+
+        document.getElementById('btnYes').addEventListener('click', () => {
+            document.body.style.backgroundColor = 'black';
+            document.body.style.color = 'white';
+            nextScreen(4);
+        });
+
+        document.getElementById('btnLights').addEventListener('click', () => {
+            document.body.style.backgroundColor = 'white';
+            document.body.style.color = 'black';
+            nextScreen(5);
+        });
+
+        document.getElementById('btnDecorate').addEventListener('click', () => {
+            nextScreen(6);
+            generateCandles(22);
+            throwConfetti();
+            
+            setTimeout(() => {
+                nextScreen(7);
+            }, 5000);
+        });
+
+        function generateCandles(count) {
+            const container = document.getElementById('candleContainer');
+            container.innerHTML = ''; 
+            for (let i = 0; i < count; i++) {
+                const candle = document.createElement('div');
+                candle.classList.add('candle');
+                const flame = document.createElement('div');
+                flame.classList.add('flame');
+                flame.style.animationDelay = (Math.random() * 0.5) + 's'; 
+                candle.appendChild(flame);
+                container.appendChild(candle);
+            }
+        }
+
+        function throwConfetti() {
+            const colors =['#ff69b4', '#ffb6c1', '#ffd700', '#87cefa', '#32cd32', '#ff4500'];
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.opacity = Math.random() + 0.5;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+    </script>
+</body>
+</html>
